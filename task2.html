@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="uk">
+  <head>
+    <meta charset="UTF-8" />
+    <title>6x6 table</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: Arial, sans-serif;
+
+        min-height: 100vh;
+
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        flex-direction: column;
+      }
+
+      table {
+        border-collapse: collapse;
+      }
+
+      td {
+        width: 50px;
+        height: 50px;
+        border: 1px solid #000;
+        text-align: center;
+        vertical-align: middle;
+        cursor: pointer;
+      }
+
+      input[type='color'] {
+        margin: 10px;
+        padding: 5px;
+      }
+    </style>
+  </head>
+  <body>
+    <table></table>
+
+    <input type="color" />
+
+    <script>
+      const table = document.querySelector('table');
+      const colorPicker = document.querySelector('input');
+
+      const colorGenerationNumbers = '0123456789ABCDEF';
+
+      const getSelectedColor = () => colorPicker.value;
+
+      const getRandomColor = () =>
+        `#${new Array(6)
+          .fill(0)
+          .map((_) => colorGenerationNumbers[Math.floor(Math.random() * 16)])
+          .join('')}`;
+
+      const createTable = (rows, cols, targetNumber) => {
+        let count = 1;
+
+        for (let rowNum = 0; rowNum < rows; rowNum++) {
+          const row = table.insertRow();
+
+          for (let colNum = 0; colNum < cols; colNum++) {
+            const col = row.insertCell();
+
+            col.textContent = count;
+
+            if (count === targetNumber) {
+              col.onmouseover = function () {
+                this.style.backgroundColor = getRandomColor();
+              };
+
+              col.onclick = function () {
+                this.style.backgroundColor = getSelectedColor();
+              };
+
+              col.ondblclick = function () {
+                const columnIndex = this.cellIndex;
+
+                for (let i = 1; i < table.rows.length; i += 2) {
+                  table.rows[i].cells[columnIndex].style.backgroundColor =
+                    getSelectedColor();
+                }
+              };
+            }
+
+            count++;
+          }
+        }
+      };
+
+      createTable(6, 6, 19);
+    </script>
+  </body>
+</html>
